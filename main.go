@@ -34,7 +34,7 @@ const (
 )
 
 func accessibleRoles() map[string][]string {
-	const greetServicePath = "/gRPCSampleApp.GreeterService/"
+	const greetServicePath = "/proto.Greeter/"
 
 	return map[string][]string{
 		greetServicePath + "SayHello":   {"admin", "user"},
@@ -69,7 +69,7 @@ func runGRPCServer(
 }
 
 func main() {
-	channels := make(chan string)
+	channel := make(chan string)
 	userStore := service.NewInMemoryUserStore()
 	err := seedUsers(userStore)
 	if err != nil {
@@ -78,7 +78,7 @@ func main() {
 
 	jwtManager := service.NewJWTManager(secretKey, tokenDuration)
 	authServer := service.NewAuthServer(userStore, jwtManager)
-	greetServer := &greetService.GreeterService{Channel: channels}
+	greetServer := &greetService.GreeterService{Channel: channel}
 
 	err = runGRPCServer(authServer, greetServer, jwtManager)
 	if err != nil {

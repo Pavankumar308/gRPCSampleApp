@@ -22,7 +22,7 @@ const (
 )
 
 func authMethods() map[string]bool {
-	const greetServicePath = "/gRPCSampleApp.GreeterService/"
+	const greetServicePath = "/proto.Greeter/"
 
 	return map[string]bool{
 		greetServicePath + "SayHello":   true,
@@ -46,10 +46,10 @@ func main() {
 	if err != nil {
 		log.Fatal("cannot create auth interceptor: ", err)
 	}
-
+	temp := interceptor.Unary()
 	conn2, err := grpc.Dial(
 		address,
-		grpc.WithUnaryInterceptor(interceptor.Unary()),
+		grpc.WithUnaryInterceptor(temp),
 		grpc.WithStreamInterceptor(interceptor.Stream()),
 		grpc.WithInsecure(), grpc.WithBlock(),
 	)

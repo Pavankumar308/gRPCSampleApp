@@ -9,6 +9,7 @@ package greetService
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	helloworld "gRPCSampleApp/proto"
 	"io/ioutil"
 )
@@ -18,6 +19,7 @@ import (
 // SayHello implements helloworld.GreeterServer
 
 func (s *GreeterService) SayHello(ctx context.Context, in *helloworld.HelloRequest) (*helloworld.HelloReply, error) {
+	fmt.Println("\n\n\n############\n\nEntered To SayHello: ", in.GetName())
 	file, _ := ioutil.ReadFile("messages.json")
 
 	data := Message{}
@@ -27,6 +29,8 @@ func (s *GreeterService) SayHello(ctx context.Context, in *helloworld.HelloReque
 	file1, _ := json.MarshalIndent(data, "", " ")
 
 	_ = ioutil.WriteFile("messages.json", file1, 0644)
-	s.Channel <- in.GetName()
+	fmt.Println("#####\n\nBefore Pushed to Channel")
+	//s.Channel <- in.GetName()
+	fmt.Println("#####\n\nPushed to Channel")
 	return &helloworld.HelloReply{Message: in.GetName()}, nil
 }

@@ -13,8 +13,6 @@ import (
 	"time"
 
 	"google.golang.org/grpc"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
 )
 
 // LaptopClient is a client to call laptop service RPCs
@@ -40,13 +38,7 @@ func (greeterClient *GreeterClient) SayHello(name string) *proto.HelloReply {
 
 	res, err := greeterClient.service.SayHello(ctx, req)
 	if err != nil {
-		st, ok := status.FromError(err)
-		if ok && st.Code() == codes.AlreadyExists {
-			// not a big deal
-			log.Print("laptop already exists")
-		} else {
-			log.Fatal("cannot create laptop: ", err)
-		}
+		log.Fatal("Unable to say hello: ", err)
 		return &proto.HelloReply{}
 	}
 
